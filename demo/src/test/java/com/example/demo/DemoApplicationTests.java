@@ -1,0 +1,33 @@
+package com.example.demo;
+
+import javax.annotation.Resource;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import com.example.demo.dto.UserDto;
+import com.example.demo.service.UserService;
+
+import lombok.AllArgsConstructor;
+
+@SpringBootTest
+class DemoApplicationTests {
+	
+	@Resource
+	UserService userService;
+
+	@Test
+	void contextLoads() throws Exception {
+		UserDto userDto = new UserDto();
+		userDto.setUserId("gykim");
+		userDto.setName("geunyoung2");
+		userDto.setPassword("12345");
+		userDto.setPhone("1111222233");
+		userDto.setEmail("test2@naver.com");
+		
+		//userService.addPerson(userDto);
+		//userService.updatePerson(userDto);
+		System.out.println(userService.findById("gykim"));
+	}
+
+}

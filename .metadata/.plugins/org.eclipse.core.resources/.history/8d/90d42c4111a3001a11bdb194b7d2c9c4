@@ -1,0 +1,68 @@
+package com.example.demo.controller;
+
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import com.example.demo.dao.UserDao;
+import com.example.demo.service.UserService;
+
+import javax.servlet.http.HttpServletRequest;
+
+@Controller
+@AllArgsConstructor
+public class UserController {
+
+	    private UserDao userDao;
+
+	    @RequestMapping("/list")
+	    public String listPerson(Model model) {
+
+	        model.addAttribute("person", userDao.listPerson());
+
+	        return "list";
+	    }
+
+	    @GetMapping("/add")
+	    public String addPage(Model model) {
+	        return "addpage";
+	    }
+
+	    @PostMapping("/add")
+	    public String addPerson(Model model, HttpServletRequest request) {
+
+	        String name = request.getParameter("name");
+	        String address = request.getParameter("address");
+
+	        UserDtoo userDao = new UserDao();
+	        userDao.set
+	        userDao.addPerson(personDto);
+
+	        return "redirect:/list";
+	    }
+
+	    @GetMapping("/update/{id}")
+	    public String updatePage(Model model, @PathVariable("id") int id) {
+	        model.addAttribute("person", personMapper.findById(id));
+	        return "updatepage";
+	    }
+
+	    @PostMapping("/update/{id}")
+	    public String updatePerson(Model model, @PathVariable("id") String id, HttpServletRequest request) {
+	        String name = request.getParameter("name");
+	        String address = request.getParameter("address");
+
+	        PersonDto personDto = new PersonDto(Integer.parseInt(id), name, address);
+	        personMapper.updatePerson(personDto);
+
+	        return "redirect:/list";
+	    }
+
+	    @GetMapping("/delete/{id}")
+	    public String deletePerson(Model model, @PathVariable("id") String id) {
+	        personMapper.deletePerson(Integer.parseInt(id));
+	        return "redirect:/list";
+	    }
+
+}

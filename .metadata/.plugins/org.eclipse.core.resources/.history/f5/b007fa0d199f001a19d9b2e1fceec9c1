@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.demo.dao.UserDao">
+
+    <select id="listPerson" resultType="com.example.demo.dto.UserDto">
+        select * from user
+    </select>
+
+    <select id="findById" parameterType="String" resultType="com.example.demo.dto.UserDto">
+        select * from user where user_id=#{userId}
+    </select>
+
+    <insert id="addPerson" parameterType="com.example.demo.dto.UserDto">
+        INSERT INTO
+        user (user_id, name , password,  phone, email, call_prod,join_date)
+        VALUES(#{userId},#{name},#{password},#{phone},#{email},#{callProd},#{joinDate})
+    </insert>
+
+    <update id="updatePerson" parameterType="com.ktds.mybatisexam.dto.UserDto">
+        UPDATE user
+        SET
+            name=#{name},
+            password=#{password},
+            phone=#{phone},
+            email=#{email},
+            call_prod=#{callProd}
+        WHERE
+            user_id=#{userId}
+    </update>
+
+    <delete id="deletePerson" parameterType="String">
+        DELETE FROM user
+        WHERE user_id=#{userId}
+    </delete>
+
+    <select id="readAuthority" parameterType="String" resultType="String">
+        SELECT authority_name FROM authority WHERE user_id = #{userId}
+    </select>
+
+
+
+</mapper>

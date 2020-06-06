@@ -1,0 +1,25 @@
+package com.example.demo;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import com.example.demo.service.UserService;
+
+import lombok.AllArgsConstructor;
+
+@SpringBootTest
+@AllArgsConstructor
+class DemoApplicationTests {
+	
+	UserService userService;
+
+	@Test
+	void contextLoads() {
+		UserDto userDto = new UserDto();
+		userDto
+		userDto.set
+		
+		userService.addPerson(userDto);
+	}
+
+}

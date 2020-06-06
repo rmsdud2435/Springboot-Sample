@@ -1,0 +1,39 @@
+package com.example.demo.service;
+
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import com.example.demo.dao.UserDao;
+import com.example.demo.dto.UserDto;
+
+import java.util.List;
+
+@Service
+@AllArgsConstructor
+public class UserService {
+
+    private UserDao userDao;
+
+    public List<UserDto> listPerson() {
+        List<UserDto> userDtos = userDao.listPerson();
+
+        return userDtos;
+    }
+
+    public void addPerson(UserDto userDto) throws Exception {
+    	userDao.addPerson(userDto);
+    }
+
+    public UserDto findById(String userId) {
+        return userDao.findById(userId);
+    }
+
+    public void updatePerson(UserDto userDto) {
+    	userDao.updatePerson(userDto);
+    }
+
+    public void deletePerson(String userId) {
+    	userDao.deletePerson(userId);
+    }
+
+}

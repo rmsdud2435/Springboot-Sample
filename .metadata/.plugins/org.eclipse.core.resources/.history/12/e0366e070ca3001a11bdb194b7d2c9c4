@@ -1,0 +1,75 @@
+package com.example.demo.service;
+
+import com.ktds.mybatisexam.dao.UserMapper;
+import com.ktds.mybatisexam.dto.SecurityMember;
+import com.ktds.mybatisexam.dto.SignUser;
+import com.ktds.mybatisexam.dto.UserDto;
+import lombok.AllArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+@AllArgsConstructor
+public class UserService implements UserDetailsService {
+
+    private UserMapper userMapper;
+
+    private static final String ROLE_PREFIX = "ROLE_";
+
+    public List<UserDto> listPerson() {
+        List<UserDto> userDtos = userMapper.listPerson();
+        for(UserDto userDto:userDtos){
+            System.out.println(userDto.getPlasticCardNumber());
+        }
+        return userDtos;
+    }
+
+    public void addPerson(SignUser signUser) throws Exception {
+        UserDto userDto = new UserDto(signUser.getPassword(),signUser.getUserId(),signUser.getName(),signUser.getPhone(),signUser.getEmail(), signUser.getCallProd(), LocalDateTime.now());
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        userMapper.addPerson(userDto);
+    }
+
+    public UserDto findById(String userId) {
+        return userMapper.findById(userId);
+    }
+
+    public void updatePerson(SignUser signUser) {
+        UserDto userDto = new UserDto(signUser.getPassword(),signUser.getUserId(),signUser.getName(),signUser.getPhone(),signUser.getEmail(), signUser.getCallProd(), LocalDateTime.now());
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        userMapper.updatePerson(userDto);
+    }
+
+    public void deletePerson(String userId) {
+        userMapper.deletePerson(userId);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
+
+        UserDto userDto = userMapper.findById(userId);
+        if (userDto != null) {
+            userDto.setAuthorities(makeGrantedAuthority(userMapper.readAuthority(userId)));
+        }
+
+        return new SecurityMember(userDto);
+    }
+
+    private static List<GrantedAuthority> makeGrantedAuthority(List<String> roles) {
+        List<GrantedAuthority> list = new ArrayList<>();
+        roles.forEach(role -> list.add(new SimpleGrantedAuthority(ROLE_PREFIX + role)));
+        return list;
+    }
+
+}

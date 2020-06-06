@@ -1,0 +1,50 @@
+package com.example.demo.service;
+
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import com.example.demo.dao.UserDao;
+import com.example.demo.dto.UserDto;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+@AllArgsConstructor
+public class UserService implements UserDetailsService {
+
+    private UserDao userDao;
+
+    private static final String ROLE_PREFIX = "ROLE_";
+
+    public List<UserDto> listPerson() {
+        List<UserDto> userDtos = userDao.listPerson();
+
+        return userDtos;
+    }
+
+    public void addPerson(SignUser signUser) throws Exception {
+        UserDto userDto = new UserDto(signUser.getPassword(),signUser.getUserId(),signUser.getName(),signUser.getPhone(),signUser.getEmail(), signUser.getCallProd(), LocalDateTime.now());
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        userMapper.addPerson(userDto);
+    }
+
+    public UserDto findById(String userId) {
+        return userDao.findById(userId);
+    }
+
+    public void updatePerson(SignUser signUser) {
+        UserDto userDto = new UserDto(signUser.getPassword(),signUser.getUserId(),signUser.getName(),signUser.getPhone(),signUser.getEmail(), signUser.getCallProd(), LocalDateTime.now());
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        userMapper.updatePerson(userDto);
+    }
+
+    public void deletePerson(String userId) {
+    	userDao.deletePerson(userId);
+    }
+
+
+}
